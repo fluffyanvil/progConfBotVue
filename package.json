@@ -1,0 +1,27 @@
+{
+  "name": "progconfbotvue",
+  "version": "1.0.0",
+  "description": "vue app for progconfbot",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fluffyanvil/progConfBotVue.git"
+  },
+  "keywords": [
+    "telegram",
+    "bot",
+    "vue.js"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fluffyanvil/progConfBotVue/issues"
+  },
+  "homepage": "https://github.com/fluffyanvil/progConfBotVue#readme",
+  "dependencies": {
+    "express": "^4.15.3"
+  }
+}
