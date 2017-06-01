@@ -10,6 +10,8 @@ module.exports = function(app) {
 
     app.get('/chats/:chatId', function (req, res) {
         var chatId = parseInt(req.params.chatId);
-        res.json({chatId: chatId});
+        res.render('chats', {
+            chatId: chatId
+        })
     });
 }
