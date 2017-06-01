@@ -7,4 +7,9 @@ module.exports = function(app) {
     app.get('/', function (req, res) {
         res.json({version: packageInfo.version});
     });
+
+    app.get('/chats/:chatId', function (req, res) {
+        var chatId = parseInt(req.params.chatId);
+        res.json({chatId: chatId});
+    });
 }
