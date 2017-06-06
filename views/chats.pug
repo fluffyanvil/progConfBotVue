@@ -7,5 +7,50 @@ html
         meta(property="og:image" content="http://progconfbot.herokuapp.com/images/bill.png")
         meta(property="og:description" content="2ch /pr progConf bot")
         meta(property="og:type" content="website")
+        script(src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.3.0/vue.js")
+        script(src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.16.2/axios.min.js")
     body
-        h1=chatId
+        div(id="app")
+            button(v-on:click="updateToday")
+
+        template(id="chart")
+            div(id="chart-div")
+
+        script.
+            var app = new Vue({
+                el: "#app",
+                data: {
+                    today: {},
+                    total: {},
+                    messagesStatistics: {},
+                    stickersStatistics: {},
+                    messagesTop: {},
+                    stickersTop: {},
+                    chatId: -1001092067303
+                },
+                methods: {
+                    updateToday: function () {
+                        axios
+                            .get(`http://progconfbot.herokuapp.com/api/today/${this.chatId}`)
+                            .then(({data}) => {
+                                this.today = data;
+                            })
+                            .
+                            catch((err) => {console.log(err)})
+                    },
+                    updateTotal: function () {
+                        axios
+                            .get(`http://progconfbot.herokuapp.com/api/total/${this.chatId}`)
+                            .then(({data}) = > {
+                            this.today = data;
+                            })
+                            .
+                            catch((err) = > {console.log(err)})
+                    }
+                }
+            });
+
+            Vue.component('chart', {
+                template: "#chart",
+
+            });
