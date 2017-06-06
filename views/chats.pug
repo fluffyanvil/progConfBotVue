@@ -7,27 +7,148 @@ html
         meta(property="og:image" content="http://progconfbot.herokuapp.com/images/bill.png")
         meta(property="og:description" content="2ch /pr progConf bot")
         meta(property="og:type" content="website")
+        script(src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js")
         script(src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.3.0/vue.js")
         script(src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.16.2/axios.min.js")
     body
         div(id="app")
-            button(v-on:click="updateToday")
+            div {{today.todayMessagesTotal}}
+            div {{total.messagesTotal}}
+            chart(label='Messages'
+                    api-url=`http://progconfbot.herokuapp.com/api/m/${chatId}`
+                    chart-id="messages"
+                    background-color='rgba(255, 99, 132, 0.2)'
+                    border-color='rgba(255,99,132,1)'
+                    border-width=1)
+            chart(label='Stickers'
+                    api-url=`http://progconfbot.herokuapp.com/api/s/${chatId}`
+                    chart-id="stickers"
+                    background-color='rgba(152, 99, 132, 0.2)'
+                    border-color='rgba(152,99,132,1)'
+                    border-width=1)
+            bar(label='Messages'
+                    api-url=`http://progconfbot.herokuapp.com/api/top/m/${chatId}`
+                    chart-id="top-messages")
 
-        template(id="chart")
-            div(id="chart-div")
+            bar(label='Stickers'
+                    api-url=`http://progconfbot.herokuapp.com/api/top/s/${chatId}`
+                    chart-id="top-stickers")
 
         script.
+            Vue.component('chart', {
+                template: '<canvas :id=chartId></canvas>',
+                props: ['chartdata', 'label', 'apiUrl', 'chartId', 'backgroundColor', 'borderColor', 'borderWidth'],
+                data: function () {
+                    return {localchartdata: this.chartdata}
+                },
+                methods: {
+                    load: function () {
+                        var data = this.localchartdata.data;
+                        var ctx = document.getElementById(this.chartId).getContext('2d');
+                        var lineChart = new Chart(ctx, {
+                            type: 'line',
+                            data: {
+                                labels: data.map(function (item) {
+                                    return item.day;
+                                }),
+                                datasets: [{
+                                    label: this.label,
+                                    data: data.map(function (item) {
+                                        return item.count;
+                                    }),
+                                    backgroundColor: this.backgroundColor,
+                                    borderColor: this.borderColor,
+                                    borderWidth: this.borderWidth
+                                }]
+                            },
+                            options: {
+                                scales: {
+                                    yAxes: [{
+                                        ticks: {
+                                            beginAtZero: true
+                                        }
+                                    }]
+                                }
+                            }
+                        });
+                    }
+                },
+                mounted: function(){
+                    axios
+                        .get(this.apiUrl)
+                        .then(({data}) => {
+                            this.localchartdata = data;
+                            this.load();
+                        })
+                        .
+                        catch((err) => {console.log(err)
+                    });
+                }
+            });
+
+
+            Vue.component('bar', {
+                template: '<canvas :id=chartId></canvas>',
+                props: ['chartdata', 'label', 'apiUrl', 'chartId'],
+                data: function () {
+                    return {localchartdata: this.chartdata}
+                },
+                methods: {
+                    load: function () {
+                        var data = this.localchartdata.data;
+                        var ctx = document.getElementById(this.chartId).getContext('2d');
+                        var lineChart = new Chart(ctx, {
+                            type: 'horizontalBar',
+                            data: {
+                                labels: data.map(function (item) {
+                                    return `${item.firstName == null ? '' : item.firstName} ${item.lastName == null ? '' : item.lastName}`;
+                                }),
+                                datasets: [{
+                                    label: this.label,
+                                    data: data.map(function (item) {
+                                        return item.count;
+                                    }),
+                                    backgroundColor: data.map(function (item) {
+                                        var letters = '0123456789ABCDEF'.split('');
+                                        var color = '#';
+                                        for (var i = 0; i < 6; i++) {
+                                            color += letters[Math.floor(Math.random() * 16)];
+                                        }
+                                        return color;
+                                    })
+                                }]
+                            }
+                        });
+                    }
+                },
+                mounted: function () {
+                    axios
+                        .get(this.apiUrl)
+                        .then(({data}) => {
+                        this.localchartdata = data;
+                    this.load();
+                })
+                    .
+                    catch((err) => {console.log(err)
+                })
+                    ;
+                }
+            });
+
+
             var app = new Vue({
                 el: "#app",
                 data: {
                     today: {},
                     total: {},
-                    messagesStatistics: {},
-                    stickersStatistics: {},
-                    messagesTop: {},
-                    stickersTop: {},
-                    chatId: -1001092067303
+                    chatId: !{JSON.stringify(chatId)}
                 },
+                components: {
+                    messagesChart: {
+
+                    }
+                },
+
                 methods: {
                     updateToday: function () {
                         axios
@@ -36,21 +157,20 @@ html
                                 this.today = data;
                             })
                             .
-                            catch((err) => {console.log(err)})
+                            catch((err) => {console.log(err)});
                     },
                     updateTotal: function () {
                         axios
                             .get(`http://progconfbot.herokuapp.com/api/total/${this.chatId}`)
-                            .then(({data}) = > {
-                            this.today = data;
+                            .then(({data}) => {
+                            this.total = data;
                             })
                             .
-                            catch((err) = > {console.log(err)})
+                            catch((err) => {console.log(err)});
                     }
+                },
+                created: function(){
+                    this.updateToday();
+                    this.updateTotal();
                 }
-            });
-
-            Vue.component('chart', {
-                template: "#chart",
-
             });
