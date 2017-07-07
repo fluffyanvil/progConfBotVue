@@ -12,8 +12,8 @@ html
         script(src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.16.2/axios.min.js")
     body
         div(id="app")
-            div {{today.todayMessagesTotal}}
-            div {{total.messagesTotal}}
+            div Total messages: {{total.messagesTotal}}
+            div Today messages: {{today.todayMessagesTotal}}
             chart(label='Messages'
                     api-url=`http://progconfbot.herokuapp.com/api/m/${chatId}`
                     chart-id="messages"
