@@ -14,8 +14,8 @@ html
         div(id="app")
             div Total messages: {{total.messagesTotal}}
             div Total stickers: {{total.stickersTotal}}
-            div Today messages: {{today.todayMessagesTotal}}({{today.messagesDirection}}{{today.messagePercentage}}%)
-            div Today stickers: {{today.todayStickersTotal}}({{today.stickersDirection}}{{today.stickerPercentage}}%)
+            div Today messages: {{today.todayMessagesTotal}}({{today.messagesDirection}}{{today.messagePercentage}}% of {{today.yesterdayMessagesTotal}})
+            div Today stickers: {{today.todayStickersTotal}}({{today.stickersDirection}}{{today.stickerPercentage}}% of {{today.yesterdayStickersTotal}})
             chart(label='Messages'
                     api-url=`http://progconfbot.herokuapp.com/api/m/${chatId}`
                     chart-id="messages"
