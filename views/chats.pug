@@ -16,6 +16,8 @@ html
             div Total stickers: {{total.stickersTotal}}
             div Today messages: {{today.todayMessagesTotal}}({{today.messagesDirection}}{{today.messagePercentage}}% of {{today.yesterdayMessagesTotal}} yesterday)
             div Today stickers: {{today.todayStickersTotal}}({{today.stickersDirection}}{{today.stickerPercentage}}% of {{today.yesterdayStickersTotal}} yesterday)
+            div Last joined users:
+                li(v-for="(user) in lastUsers") {{ item.firstName }}
             chart(label='Messages'
                     api-url=`http://progconfbot.herokuapp.com/api/m/${chatId}`
                     chart-id="messages"
@@ -143,6 +145,7 @@ html
                 data: {
                     today: {},
                     total: {},
+                    lastUsers: [],
                     chatId: !{JSON.stringify(chatId)}
                 },
                 components: {
@@ -169,10 +172,20 @@ html
                             })
                             .
                             catch((err) => {console.log(err)});
+                    },
+                    updateLastUsers: function() {
+                        axios
+                            .get(`http://progconfbot.herokuapp.com/api/users/last/${this.chatId}`)
+                            .then(({data}) => {
+                            this.lastUsers = data;
+                            })
+                            .
+                            catch((err) => {console.log(err)});
                     }
                 },
                 created: function(){
                     this.updateToday();
                     this.updateTotal();
+                    this.updateLastUsers();
                 }
             });
