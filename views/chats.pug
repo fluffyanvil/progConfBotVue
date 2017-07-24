@@ -16,8 +16,8 @@ html
             div Total stickers: {{total.stickersTotal}}
             div Today messages: {{today.todayMessagesTotal}}({{today.messagesDirection}}{{today.messagePercentage}}% of {{today.yesterdayMessagesTotal}} yesterday)
             div Today stickers: {{today.todayStickersTotal}}({{today.stickersDirection}}{{today.stickerPercentage}}% of {{today.yesterdayStickersTotal}} yesterday)
-            div Last joined users:
-                li(v-for="(user) in lastUsers") {{ item.firstName }}
+            h2 Last users:
+            li(v-for="user in lastUsers") {{ user.firstName }}
             chart(label='Messages'
                     api-url=`http://progconfbot.herokuapp.com/api/m/${chatId}`
                     chart-id="messages"
