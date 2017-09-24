@@ -43,13 +43,13 @@ html
                 template: '<canvas :id=chartId></canvas>',
                 props: ['chartdata', 'label', 'apiUrl', 'chartId', 'backgroundColor', 'borderColor', 'borderWidth'],
                 data: function () {
-                    return {localchartdata: this.chartdata}
+                    return {localChartData: this.chartData}
                 },
                 methods: {
                     load: function () {
-                        var data = this.localchartdata.data;
+                        var data = this.localChartData.data;
                         var ctx = document.getElementById(this.chartId).getContext('2d');
-                        var lineChart = new Chart(ctx, {
+                        new Chart(ctx, {
                             type: 'line',
                             data: {
                                 labels: data.map(function (item) {
@@ -81,11 +81,10 @@ html
                     axios
                         .get(this.apiUrl)
                         .then(({data}) => {
-                            this.localchartdata = data;
+                            this.localChartData = data;
                             this.load();
                         })
-                        .
-                        catch((err) => {console.log(err)
+                        .catch((err) => {console.log(err)
                     });
                 }
             });
@@ -95,17 +94,17 @@ html
                 template: '<canvas :id=chartId></canvas>',
                 props: ['chartdata', 'label', 'apiUrl', 'chartId'],
                 data: function () {
-                    return {localchartdata: this.chartdata}
+                    return {localChartData: this.chartData}
                 },
                 methods: {
                     load: function () {
-                        var data = this.localchartdata.data;
+                        var data = this.localChartData.data;
                         var ctx = document.getElementById(this.chartId).getContext('2d');
-                        var lineChart = new Chart(ctx, {
+                        new Chart(ctx, {
                             type: 'horizontalBar',
                             data: {
                                 labels: data.map(function (item) {
-                                    return `${item.firstName == null ? '' : item.firstName} ${item.lastName == null ? '' : item.lastName}`;
+                                    return `${item.firstName === null ? '' : item.firstName} ${item.lastName === null ? '' : item.lastName}`;
                                 }),
                                 datasets: [{
                                     label: this.label,
@@ -121,7 +120,7 @@ html
                                         return color;
                                     })
                                 }]
-                            },
+                            }
                         });
                     }
                 },
@@ -129,13 +128,11 @@ html
                     axios
                         .get(this.apiUrl)
                         .then(({data}) => {
-                        this.localchartdata = data;
-                    this.load();
-                })
-                    .
-                    catch((err) => {console.log(err)
-                })
-                    ;
+                            this.localChartData = data;
+                                this.load();
+                        })
+                        .catch((err) => {console.log(err)
+                        });
                 }
             });
 
